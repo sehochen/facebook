@@ -1,0 +1,436 @@
+{layout name="public/layout" /}
+
+<style>
+	.comment-tool>.praise,.comment-tool>.praise>a{
+		color:#5890FF;
+	}
+</style>
+
+  <!-- main -->
+  <div class="container row" style="margin-top:4em;">
+
+{include file="public/left" /} 
+
+	<!-- comment -->
+	<div class="col-sm-6 col-md-6 comment">
+		
+		<!-- comment-box -->
+		<div class="col-sm-12 col-md-12">
+			<script type="text/plain" id="myEditor" style="width:100%;height:3em;"></script>
+			<script>
+			    //实例化编辑器
+				var um = UM.getEditor('myEditor', {
+					toolbar:[
+			            'forecolor link |','emotion image video ',
+			        ],
+				});
+			</script>
+		</div>	
+		<!-- comment-box -->
+			
+		<div class="col-sm-12 col-md-12 content-commit" style="padding-top:0.5em;">
+			<button type="button" class="btn btn-primary btn-xs pull-right submit"> 发 布 </button>
+		</div>
+
+		<br class="visible-xs">
+
+		<!-- welcome -->
+		<div class="col-sm-12 col-md-12 welcome">
+			<ul>
+				<li><i class="icon-2x icon-facebook-sign" style="color:#3B5998;"></i></li>
+				<li> <strong>{$info->name},{$hours}</strong> </li>
+				<li class="dropdown pull-right" style="position:relative;right:-1em;top:-1.8em;">
+		          <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:gray;">  
+		          	<span class="icon-angle-down" style="text-decoration:none;"></span>
+		          </a>
+		          <ul class="dropdown-menu" role="menu">
+		            <li><a href="javascript:;" onclick="closeWindow('.welcome')" class="icon-remove"> 隐藏</a></li>
+		          </ul>
+		        </li> 
+			</ul>
+		</div>
+		<!-- welcome -->
+
+
+{volist name="blog" id="vo" key="k"}
+
+
+		<!-- list -->
+		<div class="col-xs-12 col-sm-12 col-md-12 
+		{:$vo->share != 0 ? 'share' :null;}
+		
+		 comment-list comment-list-{$k} comment-lists-{$vo->uid}">
+
+			<ul class="col-sm-12 col-md-12">			
+				<li>
+				    <a href="{:url('/Home/index/uid/'.$vo->uid)}">
+				      <img src="__PUBLIC__{$vo->head}" alt="" width="40px" height="40px">
+				    </a>
+				</li>
+				<li> 
+					<a href="{:url('/Home/index/uid/'.$vo->uid)}"> <strong style="color:#365899;">{$vo->name}</strong> </a> 
+				</li>
+
+				<li class="dropdown pull-right" style="position:relative;right:-1em;top:-1.2em;">
+		          <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:gray;">  
+		          	<span class="icon-angle-down" style="text-decoration:none;"></span>
+		          </a>
+		          <ul class="dropdown-menu" role="menu">
+		            <li><a href="#" class="icon-remove" onclick="closeWindows('{$k}')"> 隐藏</a></li>
+
+					<?php if( session('uid') != $vo->uid): ?>
+		            	<li><a href="javascript:;" onclick="delFriend('{$vo->uid}')" class="icon-remove-sign"> 停止关注</a></li>
+					<?php else: ?>
+						<li><a href="javascript:;" onclick="delBlog('{$vo->id}','{$vo->uid}')" class="icon-remove-sign"> 删除 </a></li>
+					<?php endif; ?>
+
+		            <li class="divider"></li>
+		            <li><a href="#" class="icon-info-sign"> 举报帖子</a></li>
+		            <li><a href="#" class="icon-heart"> 收藏帖子</a></li>
+
+		          </ul>
+		        </li> 
+
+				<li style="clear:both;position:relative;right:-4em;top:-1.5em;" > 
+					<a href="" style="color:gray;font-size:12px;"> {:date('m-d H:i',$vo->add_time)} </a> 
+				</li>
+
+				<li style="margin-top:-1em;" class="pull-left col-xs-12 col-sm-12 comment-content">
+					<p>
+						{$vo->content}
+					</p>	
+					<hr>			
+				</li>
+
+				<li class="col-xs-12 col-sm-12 col-md-12 comment-tool">
+					<span onclick="praise('{$vo->id}',this)" class="
+						
+					{volist name="praise" id="praises"} 
+						<?php if($praises->bid==$vo->id): ?>
+							praise
+						<?php endif; ?>
+					{/volist}
+						
+						">  <i class="icon-thumbs-up"></i> <a href="javascript:;"> 赞</a> </span> 
+
+					<span>  <i class="icon-comment"></i> <a href="javascript:;"> 评论</a> </span> 
+					<span onclick="share('{$vo->id}')">  <i class="icon-share-alt"></i> <a href="javascript:;"> 转发</a> </span> 
+
+				{gt name="vo->share" value="0"}
+					<span class="pull-right getShareName" onclick="getShareName('{$vo->share}',this)"> 
+						<strong> 
+							转自  <a href=""> {$vo->share} </a>  
+						</strong> 
+					</span> 
+				{/gt}
+
+					
+				</li>
+			</ul>
+			
+		</div>	
+		
+
+		<!-- 评论列表 -->
+		<div class="col-xs-12 col-sm-12 col-md-12 comment-list-content comment-list-content-{$k} comment-list-contents-{$vo->uid}">
+			<ul class="col-xs-12 col-sm-12">
+				<li onclick="getName('{$vo->id}',this)" class="getName">
+					<i class="icon-thumbs-up" style="color:#5890FF;"></i>
+					<a href="javascript:;" > 布尔和其他 0 位用户 </a>
+					<hr style="margin-top:0.3em;">
+				</li>
+
+      <?php  foreach($comment as $value): ?>  		
+				<?php if( $value->bid === $vo->id ): ?>	
+					<li class="comment-list-contents">
+						<div>
+								<a href="{:url('/Home/index/uid/'.$value->uid)}" class="pull-left">
+									<img src="__PUBLIC__{$value->head}" alt="" width="35px" height="35px">
+								</a>
+								<a href="{:url('/Home/index/uid/'.$value->uid)}" class="pull-left"> <strong>{$value->name}</strong> </a> : 						
+						</div>
+						<div class="pull-right" style="position:relative;left:-2.2em;top:-2.1em;">
+							<a href="javascript:;" onclick="replys('{$k}','{$value->name}')">回复</a>
+							<a href="javascript:;" style="color:#90949C;">{:date('m-d H:i',$value->add_time)}</a>
+
+							<?php if( session('uid') == $value->uid): ?>
+									<a href="javascript:;" onclick="delComment('{$value->cid}',this)">删除</a>
+							<?php endif; ?>
+
+						</div>
+						<div class="clearfix">
+							{$value->content}
+						</div>
+
+							<br class="visible-xs">
+					</li>
+					<?php endif; ?>
+				<?php endforeach; ?>
+
+				<li>
+					<!-- comment-box -->
+					<div class="col-sm-12 col-md-12" style="margin-top:1em;">			
+
+				<form action="" method="post" id="Editor{$k}-1">	
+						<script type="text/plain" id="Editor{$k}" style="width:100%;height:2em;"></script>
+						<script>
+						    //实例化编辑器
+							var um = UM.getEditor('Editor{$k}', {
+								toolbar:[
+						            'emotion image ',
+						        ],
+							});
+						</script>
+					</div>	
+					<!-- comment-box -->
+					<input type="hidden" name="bid" value="{$vo->id}">
+
+					<div class="col-sm-12 col-md-12 content-commit" style="padding-top:0.5em;margin-bottom:1em;">
+						<button type="button" class="btn btn-primary btn-xs pull-right" onclick="submits('Editor{$k}')"> 发 布 </button>
+					</div>
+				</form>
+
+				</li>
+
+			</ul>
+		</div>	
+
+		<!-- list -->
+
+	
+{/volist}
+
+	<center>
+		{$blog->render()}
+	</center>
+
+	</div>
+	<!-- comment -->
+
+
+
+	<br class="visible-xs">
+
+
+
+{include file="public/right" /} 
+
+
+
+  </div>
+  <!-- main -->
+
+<script>
+$(function(){
+	$(".submit").click(function(){
+
+			var content=$("#myEditor").html();
+			// 发布微博
+			$.post("{:url('/Index/save')}", { "content": content },
+				function(data){
+						if (data.code>0) {
+							layer.msg(data.msg);
+							setTimeout(function(){
+							window.location.reload(); 
+							},1000);
+							
+						}else{
+							layer.msg(data.msg);	
+						}
+					
+				}, "json");
+	});
+
+	$(".getName").click();
+
+	$(".getShareName").click();
+
+});
+
+
+//发布评论
+function submits(id){
+
+		var data =$("#"+id+"-1").serializeArray();
+		$.post("{:url('/Index/comment')}", data,
+		   function(data){
+		     	if (data.code>0) {
+		     		layer.msg(data.msg);
+		     		setTimeout(function(){
+						window.location.reload(); 
+		     		},1000);
+		     		
+		     	}else{
+		     		layer.msg(data.msg);	
+		     	}
+					//  console.log(data);
+		    
+		}, "json");
+	 		
+}
+
+function closeWindow(obj){
+	$(obj).hide();
+}
+
+function closeWindows(obj){
+	$(".comment-list-"+obj).hide();
+	$(".comment-list-content-"+obj).hide();
+}
+
+
+// 删除微博
+function delBlog(id,fid){
+	
+	layer.confirm('真的要删除?', {icon: 3, title:'删除提示'}, function(index){
+		$.post("{:url('/Index/delete')}", { "id": id },
+			function(data){
+			if (data.code>0) {
+					layer.msg(data.msg);
+					// console.log(data);
+					closeWindow(".comment-lists-"+fid)
+					closeWindow(".comment-list-contents-"+fid)
+				}else{
+					layer.msg(data.msg);	
+					// console.log(data);
+				}
+			}
+		);	
+	layer.close(index);
+	});
+	
+
+}
+
+
+
+// 删除评论
+function delComment(id,obj){
+	
+
+	layer.confirm('真的要删除?', {icon: 3, title:'删除提示'}, function(index){
+		$.post("{:url('/Index/delComment')}", { "id": id },
+			function(data){
+			if (data.code>0) {
+					layer.msg(data.msg);
+					// console.log(data);
+					$(obj).parents(".comment-list-contents").hide();
+				}else{
+					layer.msg(data.msg);	
+					// console.log(data);
+				}
+			}
+		);	
+	layer.close(index);
+	});
+	
+}
+
+
+
+
+// 删除朋友 取消关注
+function delFriend(fid){
+
+	layer.confirm('真的要取消关注?', {icon: 3, title:'取消关注提示'}, function(index){
+
+		$.post("{:url('/Search/delete')}", { "fid": fid, },
+			function(data){
+			if (data.code>0) {
+					layer.msg(data.msg);
+					// console.log(data);
+					closeWindow(".comment-lists-"+fid)
+					closeWindow(".comment-list-contents-"+fid)
+				}else{
+					layer.msg(data.msg);	
+					// console.log(data);
+				}
+			}
+		);	
+
+	layer.close(index);
+	});
+
+
+}
+
+
+
+// 点赞图标
+function praise(bid,obj){
+		$.post("{:url('/Index/praise')}", { "bid": bid },
+			function(data){
+					if (data.code>0) {
+						// console.log(data);	
+						data.status>0 ? $(obj).css("color","#5890FF") : $(obj).css("color","#AFB4BD");		
+						data.status>0 ? $(obj).children("a").css("color","#5890FF") :$(obj).children("a").css("color","#AFB4BD");	
+						$(".getName").click();		
+					}else{
+						layer.msg(data.msg);	
+						// console.log(data);
+						data.status>0 ? $(obj).css("color","#5890FF") : $(obj).css("color","#AFB4BD");	
+						data.status>0 ? $(obj).children("a").css("color","#5890FF") :$(obj).children("a").css("color","#AFB4BD");	
+						$(".getName").click();	
+					}
+				
+			}, "json");	
+}
+
+
+// 获取点赞人名字和总数
+function getName(bid,obj){
+
+	$.post("{:url('/Index/praiseName')}", { "bid": bid },
+		function(data){
+			// console.log(data);	
+			data.count<=0 ? $(obj).children('a').html('还没有人点赞') : $(obj).children('a').html(data.first+"和其他 "+(data.count-1)+" 位用户"  );							
+		}, "json");	
+
+}
+
+
+// 转发
+function share(bid){
+
+	layer.confirm('真的要转发?', {icon: 3, title:'转发提示'}, function(index){
+
+		$.post("{:url('/Index/share')}", { "bid": bid },
+			function(data){
+				if( data.code >=0){
+					layer.msg(data.msg);
+					setTimeout(function(){
+						window.location.reload(); 
+					},1000);
+				}else{
+					layer.msg(data.msg);
+				}
+
+				// console.log(data);		
+			}, "json");	
+	
+	layer.close(index);
+	});
+	
+}
+
+// 转发者名字
+function getShareName(uid,obj){
+	$.post("{:url('/Index/getShareName')}", { "uid": uid },
+		function(data){
+			$(obj).children().children("a").html(data.name);
+			$(obj).children().children("a").attr("href","{:url('/Home/index/uid/"+data.uid+"')}" );		
+			// console.log(data);		
+		}, "json");	
+}
+
+// 回复
+function replys(obj,name){
+	// Editor2
+	$("#Editor"+obj).html('回复:'+name+"&nbsp;");
+	// $("#Editor"+obj).focus();
+}
+
+</script>
+
+
+

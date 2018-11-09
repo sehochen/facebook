@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>FaceBook</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">  
+	
+	<link rel="stylesheet" href="__STATIC__/home/css/bootstrap.css">
+	<link rel="stylesheet" href="__STATIC__/home/css/font-awesome.min.css">
+	<link rel="stylesheet" href="__STATIC__/home/css/main.css">
+
+	<script src="__STATIC__/home/js/jquery.min.js"></script>
+	<script src="__STATIC__/home/js/bootstrap.min.js"></script>
+
+	<!-- umeditor -->
+	<link href="__STATIC__/home/umeditor/themes/default/css/umeditor.css" type="text/css" rel="stylesheet">
+	<script type="text/javascript" src="__STATIC__/home/umeditor/umeditor.config.js"></script>
+	<script type="text/javascript" src="__STATIC__/home/umeditor/umeditor.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/home/umeditor/lang/zh-cn/zh-cn.js"></script>
+
+    <!-- layer -->
+    <script type="text/javascript" src="__STATIC__/home/layer/layer.js"></script>
+
+</head>
+<body>
+
+	<header class="topbar navbar-default navbar-fixed-top row">
+
+		<!-- logo -->
+		<a href="" class="col-sm-1 col-md-1" style="text-align:right;padding-right:0.6em;">
+			<i class="icon-2x icon-facebook-sign" style="color:white;"></i>
+		</a>
+
+		<!-- search -->
+		<form class="form-inline col-sm-4 col-md-4 hidden-xs" role="form" action="{:url('Search/index')}" method="get" id="search">
+		  <div class="form-group-sm ">
+		    <div class="input-group col-sm-12" >
+		      <input class="form-control" type="text" placeholder="用户名" name="name" value="<?= isset($_GET['name']) ? $_GET['name'] :null; ?>">
+		      <div class="input-group-addon" width="10%" onclick="submit_search()"> <i class="icon-search" ></i> </div>
+		    </div>
+		  </div>
+		</form>
+		
+		<!-- list -->
+		<ul class="col-sm-5 nav-list col-md-offset-2 hidden-xs" >
+			<li style="border-right:1px solid #365089;">
+			    <a href="{:url('Set/index')}">
+			      <img src="__PUBLIC__{:$info->head}" alt="" width="30px" height="30px">
+
+						{:$info->name}
+			    </a>
+			   
+			</li>
+			<li>
+				<a href="{:url('index/index')}">首页</a>
+			</li>
+		  <li>
+		 	<!--<lable class="icon-large icon-user"></lable>	
+		     <span class="badge">14</span> 
+		  </li>-->
+		  <li>
+		 	<lable class="icon-large icon-comments"></lable>	
+		  </li>	
+		  <li>
+		 	<lable class="icon-large icon-globe"></lable>	
+		  </li>	
+		  <li style="border-left:1px solid #365089;">
+		 	<lable class="icon-large icon-lock" style="color:gray;"></lable>	
+		  </li>	
+	       <li class="dropdown">
+	          <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:gray;">  <span class="caret"></span></a>
+	          <ul class="dropdown-menu" role="menu">
+	            <li><a href="{:url('Set/index')}">资料</a></li>
+	            <li><a href="{:url('Login/quit')}">注销</a></li>
+	          </ul>
+	        </li>   		  	  
+		</ul>
+	
+	</header>
+
+{__CONTENT__}
+
+</body>
+</html>
+<script>
+function submit_search(){
+	$("#search").submit();
+}
+</script>

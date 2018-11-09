@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>FaceBook</title>
+	<link rel="stylesheet" href="__STATIC__/home/css/bootstrap.css">
+	<link rel="stylesheet" href="__STATIC__/home/css/main.css">
+	<script src="__STATIC__/home/js/jquery.min.js"></script>
+</head>
+<body style="background-color:white;">
+
+
+<!-- container -->
+  <div class="container" style="margin-top:5em;">
+  	<div class="row">
+
+		<div class="col-md-8 seting-main col-md-offset-2" >
+			<h4 style="font-weight:bold;">注册</h4>
+			
+			<form action="{:url('Login/reg')}" method="post">
+				<table class="table">
+				  <tr>
+				  	<td> <strong>邮箱</strong> </td>
+				  	<td> <input type="email" name="email" class="form-control btn-sm"> </td>
+				  </tr>
+				  <tr>
+				  	<td> <strong>密码</strong> </td>
+				  	<td> <input type="password" name="password" class="form-control btn-sm"> </td>
+				  </tr>
+				  <tr>
+				  	<td> <strong>确认密码</strong> </td>
+				  	<td> <input type="password" name="c_password" class="form-control btn-sm"> </td>
+				  </tr>
+				<tr>
+					<td colspan="2">
+						<center>
+							<input type="submit" value="注册" class="btn btn-primary btn-sm">
+						</center>					
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<center>
+							<a href="{:url('Login/index')}">登陆</a>
+						</center>						
+					</td>
+				</tr>				
+				</table>
+			</form>
+
+		</div>
+
+	</div>
+	<!-- row -->
+
+  </div>
+<!-- container -->
+
+</body>
+</html>

@@ -1,0 +1,137 @@
+{layout name="public/layout" /}
+
+<style>
+	body{
+		background:white;
+	}	
+</style>
+
+<!-- container -->
+  <div class="container" style="margin-top:3em;">
+  	<div class="row">
+
+		<div class="col-md-2 seting-list">
+			<ul>
+				<li><a href="{:url('Set/index')}">常规设置</a></li>
+				<li class="active"><a href="{:url('Set/more')}">详细设置</a></li>
+				<li class="divider"></li>
+				<!--<li><a href="">隐私</a></li>-->
+				<li><a href="{:url('Set/password')}">密码</a></li>
+			</ul>
+		</div>
+
+		<div class="col-md-8 seting-main" >
+			<h4 style="font-weight:bold;">帐户常规设置</h4>
+			<table class="table table-hover">
+
+			  <tr>
+			  	<td> <strong>感情状态</strong> </td>
+			  	<td> 
+			  		<span style="color:#90949C;">{$myInfo->state}</span> 
+			  		<input type="text" class="btn-xs" name="state" style="display:none;" >
+			  	</td>
+			  	<td>
+			  		<a href="javascript:;" class="edit">编辑</a> 
+			  		<a href="javascript:;" class="save" style="display:none;">保存</a> 
+			  		<a href="javascript:;" class="cancel" style="display:none;">取消</a> 
+			  	</td>
+			  </tr>
+			  <tr>
+			  	<td> <strong>职业</strong> </td>
+			  	<td> 
+			  		<span style="color:#90949C;">{$myInfo->profession}</span> 
+			  		<input type="text" class="btn-xs" name="profession" style="display:none;" >
+			  	</td>
+			  	<td>
+			  		<a href="javascript:;" class="edit">编辑</a> 
+			  		<a href="javascript:;" class="save" style="display:none;">保存</a> 
+			  		<a href="javascript:;" class="cancel" style="display:none;">取消</a> 
+			  	</td>
+			  </tr>
+			  <tr>
+			  	<td> <strong>毕业院校</strong> </td>
+			  	<td> 
+			  		<span style="color:#90949C;">{$myInfo->edu}</span> 
+			  		<input type="text" class="btn-xs" name="edu" style="display:none;" >
+			  	</td>
+			  	<td>
+			  		<a href="javascript:;" class="edit">编辑</a> 
+			  		<a href="javascript:;" class="save" style="display:none;">保存</a> 
+			  		<a href="javascript:;" class="cancel" style="display:none;">取消</a> 
+			  	</td>
+			  </tr>
+			<tr>
+				<td colspan="3"></td>
+			</tr>
+			</table>
+		</div>
+
+	</div>
+	<!-- row -->
+
+  </div>
+<!-- container -->
+
+
+
+
+
+
+<script>
+$(function(){
+
+	//编辑
+	$(".edit").click(function(){
+		$(this).parents('tr').children('td').eq(1).children('span').hide();
+
+		var values=$(this).parents('tr').children('td').eq(1).children('span').html();
+
+		$(this).parents('tr').children('td').eq(1).children('input').val(values);
+		$(this).parents('tr').children('td').eq(1).children('input').show();
+
+		$(this).parents('tr').children('td').last().children('.edit').hide();
+		$(this).parents('tr').children('td').last().children('.save').show();
+		$(this).parents('tr').children('td').last().children('.cancel').show();
+	});
+	
+	//取消
+	$(".cancel").click(function(){
+		$(this).parents('tr').children('td').eq(1).children('span').show();
+		$(this).parents('tr').children('td').eq(1).children('input').hide();
+
+		$(this).parents('tr').children('td').last().children('.edit').show();
+		$(this).parents('tr').children('td').last().children('.save').hide();
+		$(this).parents('tr').children('td').last().children('.cancel').hide();
+	});
+
+
+	//保存
+	$(".save").click(function(){
+		var values=$(this).parents('tr').children('td').eq(1).children('input').val()
+		$(this).parents('tr').children('td').eq(1).children('span').html(values);
+		$(this).parents('tr').children('td').eq(1).children('span').show();
+		$(this).parents('tr').children('td').eq(1).children('input').hide();
+		$(this).parents('tr').children('td').last().children('.edit').show();
+		$(this).parents('tr').children('td').last().children('.save').hide();
+		$(this).parents('tr').children('td').last().children('.cancel').hide();
+
+		// values.length <=0 && layer.msg('不能为空');
+
+		var name=$(this).parents('tr').children('td').eq(1).children('input').attr('name');
+
+
+		$.post("{:url('Set/save')}", name+"="+values,
+
+		    function(data){
+				// console.log(data);
+				data.code<=0 && layer.msg(data.msg);
+
+			}
+		, "json");
+
+	});
+
+
+
+});
+</script>
